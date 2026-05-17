@@ -4,10 +4,9 @@ project(traveler)
 
 add_executable(traveler)
 
-target_sources(traveler
-  PRIVATE
-    src/main.c
-)
+target_include_directories(traveler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+target_sources(traveler PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c)
 
 Include(FetchContent)
 
