@@ -6,7 +6,9 @@ add_executable(traveler)
 
 target_include_directories(traveler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-target_sources(traveler PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c)
+target_sources(traveler PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/Grid.c)
 
 Include(FetchContent)
 
