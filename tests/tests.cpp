@@ -1,12 +1,21 @@
 #include <catch2/catch_test_macros.hpp>
 
-unsigned int Factorial( unsigned int number ) {
-    return number <= 1 ? number : Factorial(number-1)*number;
-}
+#include "Grid.h"
+#include "Point.h"
 
-TEST_CASE( "Factorials are computed", "[factorial]" ) {
-    REQUIRE( Factorial(1) == 1 );
-    REQUIRE( Factorial(2) == 2 );
-    REQUIRE( Factorial(3) == 6 );
-    REQUIRE( Factorial(10) == 3628800 );
+TEST_CASE("Create and destroy Grid")
+{
+    const size_t rows = 10;
+    const size_t cols = 10;
+    const Point blockedSquers[] = {{0, 0}, {1, 1}};
+    const size_t blockedSquesrCount = sizeof(blockedSquers) / sizeof(blockedSquers[0]);
+
+    Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
+
+    REQUIRE(isCellBlocked(grid, 0, 0) == true);
+    REQUIRE(isCellBlocked(grid, 1, 1) == true);
+    REQUIRE(isCellBlocked(grid, 0, 1) == false);
+    REQUIRE(isCellBlocked(grid, 2, 5) == false);
+
+    destroyGrid(grid);
 }

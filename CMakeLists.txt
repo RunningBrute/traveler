@@ -1,28 +1,31 @@
 cmake_minimum_required(VERSION 3.23)
 
-project(traveler)
+project(traveler LANGUAGES C CXX)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD 20)
+
+add_library(traveler_lib)
+target_sources(traveler_lib PRIVATE src/Grid.c src/Cell.c)
+target_include_directories(traveler_lib PUBLIC include)
 
 add_executable(traveler)
+target_sources(traveler PRIVATE src/main.c)
+target_link_libraries(traveler PRIVATE traveler_lib)
 
-target_include_directories(traveler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-target_sources(traveler PRIVATE
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
-  ${CMAKE_CURRENT_SOURCE_DIR}/src/Grid.c)
-
-Include(FetchContent)
-
+include(FetchContent)
 FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.8.1
+    Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.8.1
 )
-
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(tests tests/tests.cpp)
-target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+add_executable(tests)
+target_sources(tests PRIVATE tests/tests.cpp)
+target_link_libraries(tests PRIVATE traveler_lib Catch2::Catch2WithMain)
 
 include(CTest)
 include(Catch)
+
 catch_discover_tests(tests)

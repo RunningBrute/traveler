@@ -5,10 +5,12 @@
 
 int main()
 {
-    const size_t ROWS = 10;
-    const size_t COLUMNS = 20;
+    const size_t rows = 10;
+    const size_t cols = 10;
+    const Point blockedSquers[] = {{0, 0}, {1, 1}};
+    const size_t blockedSquesrCount = sizeof(blockedSquers) / sizeof(blockedSquers[0]);
 
-    Grid* grid = createGrid(ROWS, COLUMNS);
+    Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
 
     printf("Hello traveler!\n");
 

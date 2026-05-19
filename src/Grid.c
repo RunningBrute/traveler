@@ -8,24 +8,21 @@ typedef struct Grid
 
 } Grid;
 
-Cell* createGridCells(size_t rows, size_t columns)
+static inline size_t cellIndex(const Grid* grid, const size_t row, const size_t column)
 {
-    size_t cellsCount = rows * columns;
-    Cell* cells = (Cell*)calloc(cellsCount, sizeof(Cell));
-
-    printf("Cells created. \n");
-
-    return cells;
+    return row * grid->columns + column;
 }
 
-void destroyGridCells(Cell* cells)
+static void fillBlockedCells(Grid* grid, const Point* blockedSquers, const size_t blockedSquersCount)
 {
-    free(cells);
-
-    printf("Cells destroyed.\n");
+    for (size_t i = 0; i < blockedSquersCount; i++)
+    {
+        const size_t index = cellIndex(grid, blockedSquers[i].row, blockedSquers[i].column);
+        setBlocked(&grid->cells[index]);
+    }
 }
 
-Grid* createGrid(size_t rows, size_t columns)
+Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSquers, const size_t blockedSquersCount)
 {
     Cell* cells = createGridCells(rows, columns);
     Grid* grid = malloc(sizeof(Grid));
@@ -34,9 +31,17 @@ Grid* createGrid(size_t rows, size_t columns)
     grid->columns = columns;
     grid->cells = cells;
 
+    fillBlockedCells(grid, blockedSquers, blockedSquersCount);
+
     printf("Grid created.\n");
 
     return grid;
+}
+
+bool isCellBlocked(const Grid* grid, const size_t row, const size_t column)
+{
+    const size_t index = cellIndex(grid, row, column);
+    return isBlocked(grid->cells[index]);
 }
 
 void destroyGrid(Grid* grid)
