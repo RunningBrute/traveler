@@ -16,6 +16,9 @@ extern "C" {
 typedef struct Grid Grid;
 
 Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSquers, const size_t blockedSquersCount);
+Cell* getGridCell(Grid* grid, const size_t row, const size_t column);
+size_t getGridColumnsCount(const Grid* grid);
+size_t getGridRowsCount(const Grid* grid);
 bool isCellBlocked(const Grid* grid, const size_t row, const size_t column);
 void destroyGrid(Grid* grid);
 

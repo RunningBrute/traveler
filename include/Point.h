@@ -7,7 +7,7 @@ extern "C" {
 
 typedef struct Point
 {
-    int row, column;
+    size_t row, column;
 } Point;
 
 #ifdef __cplusplus

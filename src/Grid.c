@@ -38,6 +38,22 @@ Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSq
     return grid;
 }
 
+Cell* getGridCell(Grid* grid, const size_t row, const size_t column)
+{
+    const size_t index = cellIndex(grid, row, column);
+    return &grid->cells[index];
+}
+
+size_t getGridRowsCount(const Grid* grid)
+{
+    return grid->rows;
+}
+
+size_t getGridColumnsCount(const Grid* grid)
+{
+    return grid->columns;
+}
+
 bool isCellBlocked(const Grid* grid, const size_t row, const size_t column)
 {
     const size_t index = cellIndex(grid, row, column);

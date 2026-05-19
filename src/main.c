@@ -2,6 +2,7 @@
 
 #include "Grid.h"
 #include "Point.h"
+#include "Solver.h"
 
 int main()
 {
@@ -12,7 +13,10 @@ int main()
 
     Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
 
-    printf("Hello traveler!\n");
+    const size_t movementPoints = 3;
+    Output* result = solve(grid, movementPoints);
+
+    printf("Starting point is {.row=%ld, .column=%ld} \n", result->path[0].row, result->path[0].column);
 
     destroyGrid(grid);
 
