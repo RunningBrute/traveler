@@ -4,6 +4,9 @@
 # cmake files
 build/
 
+# Catch2 files
+Testing/
+
 # Object files
 *.o
 *.ko
