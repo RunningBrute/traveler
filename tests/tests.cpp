@@ -2,6 +2,7 @@
 
 #include "Grid.h"
 #include "Point.h"
+#include "Solver.h"
 
 TEST_CASE("Create and destroy Grid")
 {
@@ -16,6 +17,8 @@ TEST_CASE("Create and destroy Grid")
     REQUIRE(isCellBlocked(grid, 1, 1) == true);
     REQUIRE(isCellBlocked(grid, 0, 1) == false);
     REQUIRE(isCellBlocked(grid, 2, 5) == false);
+
+    REQUIRE(solve(grid, 2) == NULL);
 
     destroyGrid(grid);
 }
