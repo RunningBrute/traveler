@@ -5,7 +5,6 @@ typedef struct Grid
     size_t rows;
     size_t columns;
     Cell* cells;
-
 } Grid;
 
 static inline size_t cellIndex(const Grid* grid, const size_t row, const size_t column)
@@ -25,7 +24,7 @@ static void fillBlockedCells(Grid* grid, const Point* blockedSquers, const size_
 Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSquers, const size_t blockedSquersCount)
 {
     Cell* cells = createGridCells(rows, columns);
-    Grid* grid = malloc(sizeof(Grid));
+    Grid* grid = malloc(sizeof(*grid));
 
     grid->rows = rows;
     grid->columns = columns;

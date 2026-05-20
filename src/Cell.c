@@ -3,7 +3,7 @@
 Cell* createGridCells(const size_t rows, const size_t columns)
 {
     const size_t cellsCount = rows * columns;
-    Cell* cells = (Cell*)calloc(cellsCount, sizeof(Cell));
+    Cell* cells = calloc(cellsCount, sizeof(*cells));
 
     printf("Cells created. \n");
 

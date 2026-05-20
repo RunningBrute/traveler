@@ -14,9 +14,11 @@ int main()
     Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
 
     const size_t movementPoints = 3;
-    Output* result = solve(grid, movementPoints);
+    Output* simpleResult = solve(grid, movementPoints, findFirstUnvisitedCell);
+    Output* bestResult = solve(grid, movementPoints, findBestStartingCell);
 
-    printf("Starting point is {.row=%ld, .column=%ld} \n", result->path[0].row, result->path[0].column);
+    printf("Starting point is {.row=%ld, .column=%ld} \n", simpleResult->path[0].row, simpleResult->path[0].column);
+    printf("Best starting point is {.row=%ld, .column=%ld} \n", bestResult->path[0].row, bestResult->path[0].column);
 
     destroyGrid(grid);
 
