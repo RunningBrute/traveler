@@ -23,6 +23,9 @@ static void fillBlockedCells(Grid* grid, const Point* blockedSquers, const size_
 
 Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSquers, const size_t blockedSquersCount)
 {
+    if (rows == 0 || columns == 0)
+        return NULL;
+
     Cell* cells = createGridCells(rows, columns);
     Grid* grid = malloc(sizeof(*grid));
 
@@ -59,9 +62,15 @@ bool isCellBlocked(const Grid* grid, const size_t row, const size_t column)
     return isBlocked(grid->cells[index]);
 }
 
+bool isCellVisited(const Grid* grid, const size_t row, const size_t column)
+{
+    const size_t index = cellIndex(grid, row, column);
+    return isVisited(grid->cells[index]);
+}
+
 void destroyGrid(Grid* grid)
 {
-    destroyGridCells(grid->cells);
+    if (grid) destroyGridCells(grid->cells);
     free(grid);
 
     printf("Grid destroyed.\n");

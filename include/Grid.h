@@ -20,6 +20,7 @@ Cell* getGridCell(Grid* grid, const size_t row, const size_t column);
 size_t getGridRowsCount(const Grid* grid);
 size_t getGridColumnsCount(const Grid* grid);
 bool isCellBlocked(const Grid* grid, const size_t row, const size_t column);
+bool isCellVisited(const Grid* grid, const size_t row, const size_t column);
 void destroyGrid(Grid* grid);
 
 #ifdef __cplusplus
