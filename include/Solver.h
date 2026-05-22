@@ -15,10 +15,10 @@ typedef struct Output
     size_t pathLength;
 } Output;
 
-Point* findBestStartingCell(const Grid* grid);
-Point* findFirstUnvisitedCell(const Grid* grid);
+Point findBestStartingCell(const Grid* grid);
+Point findFirstUnvisitedCell(const Grid* grid);
 
-typedef Point* (*StartingPointStrategy)(const Grid* grid);
+typedef Point (*StartingPointStrategy)(const Grid* grid);
 
 typedef struct Candidate
 {

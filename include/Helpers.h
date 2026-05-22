@@ -32,7 +32,7 @@ static inline bool validatePath(const Grid* grid, const Output* output, size_t m
         return false;
     }
 
-    for (size_t i = 0; i < movementPoints; ++i)
+    for (size_t i = 0; i < output->pathLength; ++i)
     {
         Point current = output->path[i];
         Point next = output->path[i + 1];
@@ -62,7 +62,7 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
     size_t rows = getGridRowsCount(grid);
     size_t cols = getGridColumnsCount(grid);
 
-    char* buffer = (char*)malloc(rows * cols);
+    char* buffer = (char*)malloc(sizeof(*buffer)*rows * cols);
 
     for (size_t row = 0; row < rows; ++row)
     {
@@ -84,6 +84,11 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
         for (size_t i = 0; i < output->pathLength; ++i)
         {
             Point p = output->path[i];
+
+            if (p.row >= rows || p.column >= cols)
+            {
+                continue;
+            }
 
             buffer[p.row * cols + p.column] = '*';
         }

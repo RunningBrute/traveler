@@ -12,6 +12,8 @@ target_include_directories(traveler_lib PUBLIC include)
 add_executable(traveler)
 target_sources(traveler PRIVATE src/main.c)
 target_link_libraries(traveler PRIVATE traveler_lib)
+target_compile_options(traveler PRIVATE -fsanitize=address -g)
+target_link_options(traveler PRIVATE -fsanitize=address)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -24,6 +26,8 @@ FetchContent_MakeAvailable(Catch2)
 add_executable(tests)
 target_sources(tests PRIVATE tests/tests.cpp)
 target_link_libraries(tests PRIVATE traveler_lib Catch2::Catch2WithMain)
+target_compile_options(tests PRIVATE -fsanitize=address -g)
+target_link_options(tests PRIVATE -fsanitize=address)
 
 include(CTest)
 include(Catch)
