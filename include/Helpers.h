@@ -42,7 +42,7 @@ static inline bool validatePath(const Grid* grid, const Output* output, size_t m
             return false;
         }
 
-        if (isCellBlocked(grid, next.row, next.column))
+        if (isCellBlocked(grid, next))
         {
             return false;
         }
@@ -64,11 +64,12 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
 
     char* buffer = (char*)malloc(sizeof(*buffer)*rows * cols);
 
-    for (size_t row = 0; row < rows; ++row)
+    for (int row = 0; row < rows; ++row)
     {
-        for (size_t col = 0; col < cols; ++col)
+        for (int col = 0; col < cols; ++col)
         {
-            if (isCellBlocked(grid, row, col))
+            Point point = {.row = row, .column = col };
+            if (isCellBlocked(grid, point))
             {
                 buffer[row * cols + col] = '#';
             }

@@ -7,16 +7,16 @@ typedef struct Grid
     Cell* cells;
 } Grid;
 
-static inline size_t cellIndex(const Grid* grid, const size_t row, const size_t column)
+static inline size_t cellIndex(const Grid* grid, const Point point)
 {
-    return row * grid->columns + column;
+    return point.row * grid->columns + point.column;
 }
 
 static void fillBlockedCells(Grid* grid, const Point* blockedSquers, const size_t blockedSquersCount)
 {
     for (size_t i = 0; i < blockedSquersCount; i++)
     {
-        const size_t index = cellIndex(grid, blockedSquers[i].row, blockedSquers[i].column);
+        const size_t index = cellIndex(grid, blockedSquers[i]);
         setBlocked(&grid->cells[index]);
     }
 }
@@ -40,9 +40,9 @@ Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSq
     return grid;
 }
 
-Cell* getGridCell(Grid* grid, const size_t row, const size_t column)
+Cell* getGridCell(Grid* grid, const Point point)
 {
-    const size_t index = cellIndex(grid, row, column);
+    const size_t index = cellIndex(grid, point);
     return &grid->cells[index];
 }
 
@@ -61,15 +61,15 @@ bool isPointInsideGrid(const Grid* grid, const Point point)
     return point.row >= 0 && point.column >= 0 && point.row < getGridRowsCount(grid) && point.column < getGridColumnsCount(grid);
 }
 
-bool isCellBlocked(const Grid* grid, const size_t row, const size_t column)
+bool isCellBlocked(const Grid* grid, const Point point)
 {
-    const size_t index = cellIndex(grid, row, column);
+    const size_t index = cellIndex(grid, point);
     return isBlocked(grid->cells[index]);
 }
 
-bool isCellVisited(const Grid* grid, const size_t row, const size_t column)
+bool isCellVisited(const Grid* grid, const Point point)
 {
-    const size_t index = cellIndex(grid, row, column);
+    const size_t index = cellIndex(grid, point);
     return isVisited(grid->cells[index]);
 }
 

@@ -2,9 +2,6 @@
 
 static int getNeighbourScore(const Grid* grid, const size_t row, const size_t column)
 {
-    const size_t maxRows = getGridRowsCount(grid);
-    const size_t maxCols = getGridColumnsCount(grid);
-
     Point neighbour = {
         .row = row,
         .column = column
@@ -12,12 +9,12 @@ static int getNeighbourScore(const Grid* grid, const size_t row, const size_t co
 
     if(!isPointInsideGrid(grid, neighbour))
         return 0;
-    if(isCellBlocked(grid, row, column))
+    if(isCellBlocked(grid, neighbour))
         return -100;
-    if(isCellVisited(grid, row, column))
+    if(isCellVisited(grid, neighbour))
         return 10;
 
-    return 200;
+    return 500;
 }
 
 static int get3x3WindowScore(const Grid* grid, const size_t row, const size_t column)
@@ -51,7 +48,8 @@ Point findBestStartingCell(const Grid* grid)
     {
         for (size_t col = 0;  col < maxCols; col++)
         {
-            if (isCellBlocked(grid, row, col))
+            Point point = {.row = row, .column = col };
+            if (isCellBlocked(grid, point))
                 continue;
 
             const int score = get3x3WindowScore(grid, row, col);
@@ -78,7 +76,8 @@ Point findFirstUnvisitedCell(const Grid* grid)
     {
         for (size_t col = 0;  col < getGridColumnsCount(grid); col++)
         {
-            if (!isCellBlocked(grid, row, col))
+            Point point = {.row = row, .column = col };
+            if (!isCellBlocked(grid, point))
             {
                 result.row=row;
                 result.column=col;
@@ -97,7 +96,7 @@ static bool checkCandidate(Grid* grid, const Point candidate, const int bestScor
         return false;
     }
 
-    if (isCellBlocked(grid, candidate.row, candidate.column))
+    if (isCellBlocked(grid, candidate))
     {   
         return false;
     }
@@ -171,7 +170,7 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
     size_t counter = movementPoints;
     while(counter > 0)
     {
-        Cell* currentCell = getGridCell(grid, currentPoint.row, currentPoint.column);
+        Cell* currentCell = getGridCell(grid, currentPoint);
         setVisited(currentCell);
 
         bool foundNewCell = false;
@@ -203,7 +202,7 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
             pointsInPath++;
         }
 
-        if (!isCellVisited(grid, currentPoint.row, currentPoint.column))
+        if (!isCellVisited(grid, currentPoint))
         {
             output->uniqueSquers++;
         }

@@ -8,7 +8,7 @@
 
 int main()
 {
-    const size_t movementPoints = 5;
+    const size_t movementPoints = 15;
     const size_t rows = 3;
     const size_t cols = 10;
     const Point blockedSquers[] = {};
@@ -17,7 +17,6 @@ int main()
     Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
     Output* result = solve(grid, movementPoints, findFirstUnvisitedCell);
 
-    //REQUIRE(validatePath(grid, result, movementPoints));
     printGridWithPath(grid, result, movementPoints);
 
     cleanupSolvedOutput(result);

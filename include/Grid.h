@@ -16,12 +16,12 @@ extern "C" {
 typedef struct Grid Grid;
 
 Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSquers, const size_t blockedSquersCount);
-Cell* getGridCell(Grid* grid, const size_t row, const size_t column);
+Cell* getGridCell(Grid* grid, const Point point);
 size_t getGridRowsCount(const Grid* grid);
 size_t getGridColumnsCount(const Grid* grid);
 bool isPointInsideGrid(const Grid* grid, const Point point);
-bool isCellBlocked(const Grid* grid, const size_t row, const size_t column);
-bool isCellVisited(const Grid* grid, const size_t row, const size_t column);
+bool isCellBlocked(const Grid* grid, const Point point);
+bool isCellVisited(const Grid* grid, const Point point);
 void destroyGrid(Grid* grid);
 
 #ifdef __cplusplus
