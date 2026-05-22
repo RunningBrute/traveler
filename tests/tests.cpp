@@ -97,6 +97,7 @@ TEST_CASE("Two cells available so both should be added into path")
 
     printGridWithPath(grid, result, movementPoints);
 
+    validatePath(grid, result, movementPoints);
     REQUIRE(result->pathLength == 2);
     REQUIRE(result->path[0].row == 1);
     REQUIRE(result->path[0].column == 0);
@@ -119,6 +120,49 @@ TEST_CASE("Grid like a stick but should be ok")
     Output* result = solve(grid, movementPoints, findFirstUnvisitedCell);
 
     printGridWithPath(grid, result, movementPoints);
+    validatePath(grid, result, movementPoints);
+
+    cleanupSolvedOutput(result);
+    destroyGrid(grid);
+}
+
+TEST_CASE("Revisit is possible - we should end when we started")
+{
+    const size_t movementPoints = 12;
+    const size_t rows = 8;
+    const size_t cols = 1;
+    const Point blockedSquers[] = {{0,0}};
+    const size_t blockedSquesrCount = 1;
+
+    Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
+    Output* result = solve(grid, movementPoints, findFirstUnvisitedCell);
+
+    REQUIRE(result->pathLength == movementPoints + 1); // starting point also count
+
+    printGridWithPath(grid, result, movementPoints);
+    validatePath(grid, result, movementPoints);
+
+    cleanupSolvedOutput(result);
+    destroyGrid(grid);
+}
+
+TEST_CASE("Corridor test")
+{
+    const size_t movementPoints = 3;
+    const size_t rows = 3;
+    const size_t cols = 5;
+    const Point blockedSquers[] = {
+        {0,0}, {0,1}, {0,2}, {0,3}, {0,4},
+                                    {1,4},
+        {2,0}, {2,1}, {2,2}, {2,3}, {2,4}
+    };
+    const size_t blockedSquesrCount = sizeof(blockedSquers)/sizeof(blockedSquers[0]);
+
+    Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
+    Output* result = solve(grid, movementPoints, findFirstUnvisitedCell);
+
+    printGridWithPath(grid, result, movementPoints);
+    validatePath(grid, result, movementPoints);
 
     cleanupSolvedOutput(result);
     destroyGrid(grid);

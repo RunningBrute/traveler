@@ -32,7 +32,7 @@ static inline bool validatePath(const Grid* grid, const Output* output, size_t m
         return false;
     }
 
-    for (size_t i = 0; i < output->pathLength; ++i)
+    for (size_t i = 0; i < output->pathLength - 1; ++i)
     {
         Point current = output->path[i];
         Point next = output->path[i + 1];

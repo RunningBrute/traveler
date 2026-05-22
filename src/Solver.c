@@ -10,7 +10,7 @@ static int getNeighbourScore(const Grid* grid, const size_t row, const size_t co
         .column = column
     };
 
-    if(isPointInsideGrid(grid, neighbour))
+    if(!isPointInsideGrid(grid, neighbour))
         return 0;
     if(isCellBlocked(grid, row, column))
         return -100;
@@ -124,6 +124,22 @@ static bool checkCandidate(Grid* grid, const Point candidate, const int bestScor
     return true;
 }
 
+typedef struct
+{
+    int dRow;
+    int dColumn;
+} Direction;
+
+#define MAX_DIRECTIONS 4
+
+static const Direction directions[MAX_DIRECTIONS] =
+{
+    {-1, 0}, // up
+    {1,  0}, // down
+    {0, -1}, // left
+    {0,  1}  // right
+};
+
 Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy startingPointStrategy)
 {
     if (!grid)
@@ -158,53 +174,31 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
         Cell* currentCell = getGridCell(grid, currentPoint.row, currentPoint.column);
         setVisited(currentCell);
 
-        int bestScore = -100000;
-        bool foundCandidate = false;
-        Point bestPoint = {
-            .row = 0,
-            .column = 0
+        bool foundNewCell = false;
+        Candidate bestCell = {
+            .score = -123456,
+            .point = {-1, -1}
         };
 
-        Point nextPoint = {currentPoint.row - 1, currentPoint.column};
-        Candidate nextCandidate;
-        if (checkCandidate(grid, nextPoint, bestScore, &nextCandidate))
+        for (size_t i = 0; i < MAX_DIRECTIONS; ++i)
         {
-            foundCandidate = true;
-            bestScore = nextCandidate.score;
-            bestPoint = nextCandidate.point;
+            Point nextPoint = { 
+                .row = currentPoint.row + directions[i].dRow,
+                .column = currentPoint.column + directions[i].dColumn
+            };
+
+            Candidate candidate;
+            if (checkCandidate(grid, nextPoint, bestCell.score, &candidate))
+            {
+                foundNewCell = true;
+                bestCell = candidate;
+            }
         }
 
-        nextPoint.row = currentPoint.row + 1;
-        nextPoint.column = currentPoint.column;
-        if (checkCandidate(grid, nextPoint, bestScore, &nextCandidate))
+        if (foundNewCell)
         {
-            foundCandidate = true;
-            bestScore = nextCandidate.score;
-            bestPoint = nextCandidate.point;
-        }
-
-        nextPoint.row = currentPoint.row;
-        nextPoint.column = currentPoint.column - 1;
-        if (checkCandidate(grid, nextPoint, bestScore, &nextCandidate))
-        {
-            foundCandidate = true;
-            bestScore = nextCandidate.score;
-            bestPoint = nextCandidate.point;
-        }
-
-        nextPoint.row = currentPoint.row;
-        nextPoint.column = currentPoint.column + 1;
-        if (checkCandidate(grid, nextPoint, bestScore, &nextCandidate))
-        {
-            foundCandidate = true;
-            bestScore = nextCandidate.score;
-            bestPoint = nextCandidate.point;
-        }
-
-        if (foundCandidate)
-        {
-            currentPoint = bestPoint;
-            output->path[pointsInPath] = bestPoint;
+            currentPoint = bestCell.point;
+            output->path[pointsInPath] = bestCell.point;
             output->pathLength++;
             pointsInPath++;
         }
