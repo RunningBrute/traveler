@@ -56,6 +56,11 @@ size_t getGridColumnsCount(const Grid* grid)
     return grid->columns;
 }
 
+bool isPointInsideGrid(const Grid* grid, const Point point)
+{
+    return point.row >= 0 && point.column >= 0 && point.row < getGridRowsCount(grid) && point.column < getGridColumnsCount(grid);
+}
+
 bool isCellBlocked(const Grid* grid, const size_t row, const size_t column)
 {
     const size_t index = cellIndex(grid, row, column);

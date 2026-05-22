@@ -64,8 +64,6 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
 
     char* buffer = (char*)malloc(rows * cols);
 
-    printf("Log 1 \n");
-
     for (size_t row = 0; row < rows; ++row)
     {
         for (size_t col = 0; col < cols; ++col)
@@ -81,8 +79,6 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
         }
     }
 
-    printf("Log 2 \n");
-
     if (output)
     {
         for (size_t i = 0; i < output->pathLength; ++i)
@@ -92,18 +88,12 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
             buffer[p.row * cols + p.column] = '*';
         }
 
-        printf("Log 3 \n");
         Point start = output->path[0];
         Point end = output->path[output->pathLength - 1];
 
-        printf("Log 4 .row: %ld * cols: %ld + .cols: %ld \n", start.row, cols, start.column);
-        printf("Log 4 index: %ld \n", start.row * cols + start.column);
         buffer[start.row * cols + start.column] = 'S';
-        printf("Log 4.1 .row: %ld * cols: %ld + .cols: %ld \n", end.row, cols, end.column);
-        printf("Log 4.1 index: %ld \n", end.row * cols + end.column);
         buffer[end.row * cols + end.column] = 'E';
     }
-    printf("Log 5 \n");
     printf("\n");
 
     for (size_t row = 0; row < rows; ++row)
@@ -116,7 +106,6 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
         printf("\n");
     }
 
-    printf("Log 6 \n");
     printf("\n");
 
     free(buffer);

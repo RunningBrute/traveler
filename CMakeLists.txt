@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 20)
 
 add_library(traveler_lib)
-target_sources(traveler_lib PRIVATE src/Grid.c src/Cell.c)
+target_sources(traveler_lib PRIVATE src/Grid.c src/Cell.c src/Solver.c)
 target_include_directories(traveler_lib PUBLIC include)
 
 add_executable(traveler)
