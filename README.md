@@ -2,6 +2,5 @@
 
 ## Build and tests
 
-`cmake -B build`
-`cmake --build build`
-`ctest --test-dir build`
+* build: `cmake -B build` and `cmake --build build`
+* run tests: `ctest --test-dir build`

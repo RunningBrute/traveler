@@ -35,8 +35,6 @@ Grid* createGrid(const size_t rows, const size_t columns, const Point* blockedSq
 
     fillBlockedCells(grid, blockedSquers, blockedSquersCount);
 
-    printf("Grid created.\n");
-
     return grid;
 }
 
@@ -77,6 +75,4 @@ void destroyGrid(Grid* grid)
 {
     if (grid) destroyGridCells(grid->cells);
     free(grid);
-
-    printf("Grid destroyed.\n");
 }
