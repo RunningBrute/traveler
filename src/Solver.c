@@ -210,7 +210,7 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
 
         if (foundNewCell)
         {
-            const bool uniqueSquere = !isCellVisited(grid, currentPoint) ? false : true;
+            const bool uniqueSquere = isCellVisited(grid, currentPoint) ? true : false;
             addPointIntoOutputPath(bestCell.point, output, uniqueSquere);
             currentPoint = bestCell.point;
         }
