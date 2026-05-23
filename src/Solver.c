@@ -139,17 +139,38 @@ static const Direction directions[MAX_DIRECTIONS] =
     {0,  1}  // right
 };
 
-Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy startingPointStrategy)
+static Output* createEmptyOutput(const size_t movementPoints)
 {
-    if (!grid)
-        return NULL;
-
     size_t possibleMaxPath = movementPoints + 1;
-
+    
     Output* output = (Output*)malloc(sizeof(*output));
     output->uniqueSquers = 0;
     output->path = (Point*)malloc(sizeof(*output->path)*possibleMaxPath);
     output->pathLength = 0;
+
+    return output;
+}
+
+static void addPointIntoOutputPath(const Point point, Output* output, const bool uniqueSquere)
+{
+    output->path[output->pathLength++] = point;
+    if (uniqueSquere) output->uniqueSquers++;
+}
+
+void cleanupSolvedOutput(Output* output)
+{
+    if (output) free(output->path);
+    free(output);
+}
+
+Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy startingPointStrategy)
+{
+    if (!grid)
+    {
+        return NULL;
+    }
+
+    Output* output = createEmptyOutput(movementPoints);
 
     Point startingPoint = startingPointStrategy(grid);
     if (startingPoint.row < 0)
@@ -157,16 +178,9 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
         cleanupSolvedOutput(output);
         return NULL;
     }
+    addPointIntoOutputPath(startingPoint, output, true);
 
-    Point currentPoint;
-    currentPoint.column = startingPoint.column;
-    currentPoint.row = startingPoint.row;
-
-    output->path[0] = currentPoint;
-    output->pathLength++;
-    output->uniqueSquers++;
-
-    size_t pointsInPath = 1;
+    Point currentPoint = startingPoint;
     size_t counter = movementPoints;
     while(counter > 0)
     {
@@ -196,25 +210,13 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
 
         if (foundNewCell)
         {
+            const bool uniqueSquere = !isCellVisited(grid, currentPoint) ? true : false;
+            addPointIntoOutputPath(bestCell.point, output, uniqueSquere);
             currentPoint = bestCell.point;
-            output->path[pointsInPath] = bestCell.point;
-            output->pathLength++;
-            pointsInPath++;
-        }
-
-        if (!isCellVisited(grid, currentPoint))
-        {
-            output->uniqueSquers++;
         }
 
         counter--;
     }
 
     return output;
-}
-
-void cleanupSolvedOutput(Output* output)
-{
-    if (output) free(output->path);
-    free(output);
 }
