@@ -167,3 +167,33 @@ TEST_CASE("Corridor test")
     cleanupSolvedOutput(result);
     destroyGrid(grid);
 }
+
+TEST_CASE("Check the perimeter!")
+{
+    const size_t movementPoints = 14;
+    const size_t rows = 4;
+    const size_t cols = 5;
+    const Point blockedSquers[] = {
+        {1,1}, {1,2}, {1,3},
+        {2,1}, {2,2}, {2,3}
+    };
+    const size_t blockedSquesrCount = sizeof(blockedSquers)/sizeof(blockedSquers[0]);
+
+    Grid* grid = createGrid(rows, cols, blockedSquers, blockedSquesrCount);
+    Output* result = solve(grid, movementPoints, findFirstUnvisitedCell);
+
+    printGridWithPath(grid, result, movementPoints);
+    validatePath(grid, result, movementPoints);
+
+    REQUIRE(result->pathLength == result->uniqueSquers);
+    REQUIRE(result->uniqueSquers == movementPoints + 1); // +1 for starting point
+    
+    Point start = result->path[0];
+    Point end = result->path[result->pathLength - 1];
+
+    REQUIRE(start.row == end.row);
+    REQUIRE(start.column == end.column);
+
+    cleanupSolvedOutput(result);
+    destroyGrid(grid);
+}
