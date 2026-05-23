@@ -185,8 +185,10 @@ TEST_CASE("Check the perimeter!")
     printGridWithPath(grid, result, movementPoints);
     validatePath(grid, result, movementPoints);
 
-    REQUIRE(result->pathLength == result->uniqueSquers);
-    REQUIRE(result->uniqueSquers == movementPoints + 1); // +1 for starting point
+    // starting point is the same as ending point
+    // so we have only result->pathLength - 1 unique squers
+    REQUIRE(result->pathLength - 1 == result->uniqueSquers);
+    REQUIRE(result->uniqueSquers == movementPoints);
     
     Point start = result->path[0];
     Point end = result->path[result->pathLength - 1];
