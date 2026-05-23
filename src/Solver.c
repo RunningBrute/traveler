@@ -1,4 +1,8 @@
+#include <limits.h>
+
 #include "Solver.h"
+
+#define LARGE_GRID_THRESHOLD 25
 
 static int getNeighbourScore(const Grid* grid, const size_t row, const size_t column)
 {
@@ -21,14 +25,14 @@ static int get3x3WindowScore(const Grid* grid, const size_t row, const size_t co
 {
     int score = 0;
 
-    score += getNeighbourScore(grid, row - 1, column - 1);
-    score += getNeighbourScore(grid, row - 1, column    );
-    score += getNeighbourScore(grid, row - 1, column + 1);
-    score += getNeighbourScore(grid, row,     column - 1);
-    score += getNeighbourScore(grid, row,     column + 1);
-    score += getNeighbourScore(grid, row + 1, column - 1);
-    score += getNeighbourScore(grid, row + 1, column    );
-    score += getNeighbourScore(grid, row + 1, column + 1);
+    for (int dr = -1; dr <= 1; ++dr)
+    {
+        for (int dc = -1; dc <= 1; ++dc)
+        {
+            if (dr == 0 && dc == 0) continue;
+            score += getNeighbourScore(grid, row + dr, column + dc);
+        }
+    }
 
     return score;
 }
@@ -103,7 +107,7 @@ static bool checkCandidate(Grid* grid, const Point candidate, const int bestScor
 
     size_t numOfElements = getGridRowsCount(grid) * getGridColumnsCount(grid);
     int score = 0;
-    if (numOfElements > 25)
+    if (numOfElements > LARGE_GRID_THRESHOLD)
     {
         score = get3x3WindowScore(grid, candidate.row, candidate.column);
     }
@@ -151,15 +155,25 @@ static Output* createEmptyOutput(const size_t movementPoints)
     return output;
 }
 
-static void addPointIntoOutputPath(const Point point, Output* output, const bool uniqueSquere)
+static void addPointToOutputPath(const Point point, Output* output, Grid* grid)
 {
     output->path[output->pathLength++] = point;
-    if (uniqueSquere) output->uniqueSquers++;
+    if (!isCellVisited(grid, point))
+    {
+        Cell* currentCell = getGridCell(grid, point);
+        setVisited(currentCell);
+        output->uniqueSquers++;
+    }
 }
 
 void cleanupSolvedOutput(Output* output)
 {
-    if (output) free(output->path);
+    if (!output)
+    {
+        return;
+    }
+    
+    free(output->path);
     free(output);
 }
 
@@ -178,7 +192,7 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
         cleanupSolvedOutput(output);
         return NULL;
     }
-    addPointIntoOutputPath(startingPoint, output, true);
+    addPointToOutputPath(startingPoint, output, grid);
 
     Point currentPoint = startingPoint;
     size_t counter = movementPoints;
@@ -189,7 +203,7 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
 
         bool foundNewCell = false;
         Candidate bestCell = {
-            .score = -123456,
+            .score = INT_MIN,
             .point = {-1, -1}
         };
 
@@ -211,8 +225,7 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
         if (foundNewCell)
         {
             currentPoint = bestCell.point;
-            const bool uniqueSquere = !isCellVisited(grid, currentPoint) ? true : false;
-            addPointIntoOutputPath(bestCell.point, output, uniqueSquere);
+            addPointToOutputPath(bestCell.point, output, grid);
         }
 
         counter--;
