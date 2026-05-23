@@ -3,6 +3,7 @@
 #include "Solver.h"
 
 #define LARGE_GRID_THRESHOLD 25
+#define MAX_PATH_HISTORY 10
 
 static int getNeighbourScore(const Grid* grid, const size_t row, const size_t column)
 {
@@ -93,7 +94,13 @@ Point findFirstUnvisitedCell(const Grid* grid)
     return result;
 }
 
-static bool checkCandidate(Grid* grid, const Point candidate, const int bestScore, Candidate* nextCandidate)
+static bool checkCandidate(
+    Grid* grid,
+    const Point candidate,
+    const Point* recentHistory,
+    const int recentHistorySize,
+    const int bestScore,
+    Candidate* nextCandidate)
 {
     if (!isPointInsideGrid(grid, candidate))
     {
@@ -114,6 +121,14 @@ static bool checkCandidate(Grid* grid, const Point candidate, const int bestScor
     else
     {
         score = getNeighbourScore(grid, candidate.row, candidate.column);
+    }
+
+    for (int i = 0; i < recentHistorySize; ++i)
+    {
+        if (pointsEqual(candidate, recentHistory[i]))
+        {
+            score -= 500;
+        }
     }
 
     if (score <= bestScore)
@@ -148,9 +163,19 @@ static Output* createEmptyOutput(const size_t movementPoints)
     size_t possibleMaxPath = movementPoints + 1;
     
     Output* output = (Output*)malloc(sizeof(*output));
+    if (!output)
+    {
+        return NULL;
+    }
+
     output->uniqueSquers = 0;
-    output->path = (Point*)malloc(sizeof(*output->path)*possibleMaxPath);
     output->pathLength = 0;
+    output->path = (Point*)malloc(sizeof(*output->path)*possibleMaxPath);
+    if(!output->path)
+    {
+        free(output);
+        return NULL;
+    }
 
     return output;
 }
@@ -196,6 +221,10 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
 
     Point currentPoint = startingPoint;
     size_t counter = movementPoints;
+    
+    Point recentHistory[MAX_PATH_HISTORY];
+    int recentHistorySize = 0;
+
     while(counter > 0)
     {
         Cell* currentCell = getGridCell(grid, currentPoint);
@@ -215,7 +244,7 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
             };
 
             Candidate candidate;
-            if (checkCandidate(grid, nextPoint, bestCell.score, &candidate))
+            if (checkCandidate(grid, nextPoint, recentHistory, recentHistorySize, bestCell.score, &candidate))
             {
                 foundNewCell = true;
                 bestCell = candidate;
@@ -224,6 +253,8 @@ Output* solve(Grid* grid, const size_t movementPoints, StartingPointStrategy sta
 
         if (foundNewCell)
         {
+            recentHistory[recentHistorySize++] = currentPoint;
+            if (recentHistorySize > MAX_PATH_HISTORY - 1) recentHistorySize = 0;
             currentPoint = bestCell.point;
             addPointToOutputPath(bestCell.point, output, grid);
         }

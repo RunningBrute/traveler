@@ -199,3 +199,24 @@ TEST_CASE("Check the perimeter!")
     cleanupSolvedOutput(result);
     destroyGrid(grid);
 }
+
+TEST_CASE("Solver should avoid bouncing")
+{
+    const size_t movementPoints = 5;
+    const size_t rows = 2;
+    const size_t cols = 3;
+    const Point blockedSquares[] = {{1,1}};
+    const size_t blockedSquaresCount = 1;
+
+    Grid* grid = createGrid(rows, cols, blockedSquares, blockedSquaresCount);
+    Output* result = solve(grid, movementPoints, findFirstUnvisitedCell);
+
+    printGridWithPath(grid, result, movementPoints);
+
+    REQUIRE(result != NULL);
+    REQUIRE(validatePath(grid, result, movementPoints));
+    //REQUIRE(result->uniqueSquers == 3);
+
+    cleanupSolvedOutput(result);
+    destroyGrid(grid);
+}

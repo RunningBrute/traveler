@@ -11,6 +11,11 @@ typedef struct Point
     int column;
 } Point;
 
+static inline bool pointsEqual(const Point a, const Point b)
+{
+    return a.row == b.row && a.column == b.column;
+}
+
 #ifdef __cplusplus
 }
 #endif

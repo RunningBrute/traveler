@@ -117,6 +117,18 @@ void printGridWithPath(const Grid* grid, const Output* output, size_t movementPo
     free(buffer);
 }
 
+void printPath(const Output* output)
+{
+    printf("path: ");
+    for (size_t i = 0; i < output->pathLength; ++i)
+    {
+        Point p = output->path[i];
+        printf("(%d, %d) ", p.row, p.column);
+    }
+    printf("\n");
+    printf("unique squers: %ld \n", output->uniqueSquers);
+}
+
 #ifdef __cplusplus
 }
 #endif
